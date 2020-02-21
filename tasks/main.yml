@@ -2,7 +2,30 @@
 # Dump all variables for debugging
 # https://coderwall.com/p/13lh6w/dump-all-variables
 
+- name: "Assert all the role is correctly setup"
+  assert:
+    that:
+    - debug_dumpallvars_file_guest_destination is defined
+    - dumpall_keep_on_guest is defined
+    - dumpall_keep_on_host is defined
+
 - name: Dump all vars
   template:
     src: dumpall.j2
-    dest: "{{ debug_dumpallvars_file }}"
+    dest: "{{ debug_dumpallvars_file_guest_destination }}"
+
+
+- name: Retrieve dumpfile
+  fetch: 
+    src: "{{ debug_dumpallvars_file_guest_destination }}"
+    dest: "{{ debug_dumpallvars_file_host_destination }}"
+    flat: True
+    when: >
+      dumpall_host_destination is defined and
+      dumpall_keep_on_host == True
+
+- name: Remove dumpfile on the guest
+  file: 
+    path: "{{ debug_dumpallvars_file_guest_destination }}"
+    state: absent
+  when: dumpall_keep_on_guest == False

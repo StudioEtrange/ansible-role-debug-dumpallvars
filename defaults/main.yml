@@ -1,5 +1,18 @@
 ---
 # defaults file for roles/debug-dumpallvars
 
-# Dump file
-debug_dumpallvars_file: /tmp/ansible-debug-dumpallvars.txt
+# Define here where you want to put the dump file on the target. The
+# destination directory must already exists.
+debug_dumpallvars_file_guest_destination: /tmp/ansible-debug-dumpallvars-guest-{{ inventory_hostname }}.txt
+
+# Define here where you want to retrieve the dump file on the 
+# host. If this variable is not set, dumpall_keep_on_host is assumed to be False.
+debug_dumpallvars_file_host_destination: "/tmp/ansible-debug-dumpallvars-host-{{ inventory_hostname }}.txt"
+
+# Disable this option if you don't want to keep the dump file
+# on the target.
+dumpall_keep_on_guest: no
+
+# Disable this option if you don't want to retrieve the dump file
+# on the host.
+dumpall_keep_on_host: yes
